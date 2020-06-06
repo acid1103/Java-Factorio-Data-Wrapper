@@ -1,0 +1,14 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'org.luaj:luaj-jse:3.0.1'
+    implementation 'org.json:json:20160810'
+    implementation 'com.google.guava:guava:21.0'
+    implementation 'com.diffplug.durian:durian:3.4.0'
+}
