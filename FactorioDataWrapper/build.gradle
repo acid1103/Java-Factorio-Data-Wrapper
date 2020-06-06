@@ -1,3 +1,6 @@
+import groovy.transform.Field
+import groovy.json.JsonSlurper
+
 plugins {
     id 'java-library'
 }
@@ -11,4 +14,24 @@ dependencies {
     implementation 'org.json:json:20160810'
     implementation 'com.google.guava:guava:21.0'
     implementation 'com.diffplug.durian:durian:3.4.0'
+}
+
+@Field final String APP_PACKAGE = "com.demod.factorio.apps"
+
+task executeApp(type: JavaExec) {
+	group = "Execution"
+	description = "Run the app specified in config.json"
+	classpath = sourceSets.main.runtimeClasspath
+	main = getMainClassFromConfig()
+}
+
+def getMainClassFromConfig() {
+	def app = getPropertyFromConfig("app")
+	return APP_PACKAGE + "." + app
+}
+
+def getPropertyFromConfig(key) {
+	def slurper = new JsonSlurper()
+	def json = slurper.parse(file("config.json"))
+	return json[key]
 }
