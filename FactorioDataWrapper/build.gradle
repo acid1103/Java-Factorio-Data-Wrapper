@@ -1,9 +1,18 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import groovy.transform.Field
 import groovy.json.JsonSlurper
 
-plugins {
-    id 'java-library'
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
+    }
 }
+
+apply plugin: 'java-library'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 repositories {
     jcenter()
@@ -20,9 +29,23 @@ dependencies {
 
 task executeApp(type: JavaExec) {
 	group = "Execution"
-	description = "Run the app specified in config.json"
+	description = "Run the app specified in config.json."
 	classpath = sourceSets.main.runtimeClasspath
 	main = getMainClassFromConfig()
+}
+
+task packageApp(type: ShadowJar) {
+	group = "Build"
+	description = "Builds an executable fat jar for the app specified in config.json."
+	manifest {
+        attributes([
+            "Main-Class": getMainClassFromConfig()
+        ])
+    }
+    baseName = getPropertyFromConfig("app")
+    classifier = ""
+	from sourceSets.main.runtimeClasspath
+	configurations = [ project.configurations.runtimeClasspath ]
 }
 
 def getMainClassFromConfig() {
