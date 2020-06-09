@@ -12,6 +12,7 @@ buildscript {
 }
 
 apply plugin: 'java-library'
+apply plugin: 'maven'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 repositories {
